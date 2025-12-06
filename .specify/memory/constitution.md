@@ -1,55 +1,89 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!-- Sync Impact Report
+Version Change: (new file) → 1.0.0
+Reason: Initial constitution establishment for Todo App CLI project
+Principles Added:
+  - Clean Code Standards (1 of 6)
+  - Project Structure (2 of 6)
+  - Development Methodology (3 of 6)
+  - Data Management (4 of 6)
+  - User Experience (5 of 6)
+  - Code Quality Gates (6 of 6)
+Additional Sections:
+  - Constraints (non-negotiable project boundaries)
+  - Success Criteria (definitive completion conditions)
+  - Governance (amendment and compliance procedures)
+Templates Requiring Updates: ✅ spec-template.md, ✅ plan-template.md, ✅ tasks-template.md
+-->
+
+# Todo App Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### 1. Clean Code Standards
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+Write readable, self-documenting code with meaningful variable and function names. Follow PEP 8 style guidelines strictly. Keep functions small and focused on a single responsibility. Use type hints for all function parameters and return values. Write docstrings for all public functions and classes.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+**Rationale**: Clean, well-typed code reduces maintenance burden, improves onboarding, and prevents defects through explicitness.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### 2. Project Structure
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+Use UV as the package manager. Target Python 3.13+. Organize code into logical modules. Separate concerns: data models, business logic, and CLI interface. Keep the main entry point clean and minimal.
 
-### [PRINCIPLE_6_NAME]
+**Rationale**: Clear separation of concerns enables independent testing, reduces coupling, and makes the codebase maintainable as it grows. UV provides fast, reliable dependency management for modern Python projects.
 
+### 3. Development Methodology
 
-[PRINCIPLE__DESCRIPTION]
+Follow spec-driven development principles. Write specifications before implementation. Each feature must be independently testable. Maintain clear boundaries between components.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+**Rationale**: Specifying requirements upfront prevents scope creep, ensures alignment on acceptance criteria, and enables parallel work on independent features.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### 4. Data Management
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+Store all tasks in memory (no persistence required). Use appropriate data structures for efficient operations. Ensure data integrity for all CRUD operations. Use unique identifiers for task management.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+**Rationale**: In-memory storage keeps the MVP simple while proper data structures and IDs ensure correctness. If persistence becomes needed later, a well-structured data layer makes migration straightforward.
+
+### 5. User Experience
+
+Provide clear, helpful CLI feedback. Handle errors gracefully with informative messages. Maintain consistent command patterns. Support intuitive task management workflow.
+
+**Rationale**: A predictable, friendly CLI experience reduces user frustration and support burden. Consistent patterns make the application feel professional.
+
+### 6. Code Quality Gates
+
+No global mutable state outside of the main application class. All business logic must be unit testable. Input validation for all user-provided data. Explicit is better than implicit.
+
+**Rationale**: Eliminating global state enables isolated testing and reasoning about code behavior. Input validation at system boundaries prevents data corruption. Explicit code is debuggable and maintainable.
+
+## Constraints
+
+The following constraints are **non-negotiable** and must be respected throughout development:
+
+- **DO NOT** use external databases or file storage
+- **DO NOT** add features beyond the 5 basic requirements (add, delete, update, view, complete)
+- **DO NOT** use complex frameworks for the CLI (argparse or simple input is sufficient)
+- **DO NOT** over-engineer the solution
+- **ALWAYS** validate user input before processing
+- **ALWAYS** provide feedback after each operation
+
+## Success Criteria
+
+The application is complete when:
+
+- Users can add new tasks with descriptions
+- Users can delete existing tasks by ID
+- Users can update task descriptions
+- Users can view all tasks with their status
+- Users can mark tasks as complete
+- All operations provide clear user feedback
+- The code passes linting and type checking
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+**Amendment Procedure**: Constitution amendments require written justification of the change (rationale, impact on existing code/practices). Changes are documented in a new Prompt History Record with stage `constitution`. Version bumps follow semantic versioning: MAJOR for backward-incompatible principle removals or redefinitions, MINOR for new principles or materially expanded guidance, PATCH for clarifications or non-semantic refinements.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Compliance Review**: All pull requests and feature implementations must verify alignment with these principles. Violations require documented justification in the commit message or PR description explaining why the constraint is superseded.
+
+**Runtime Guidance**: Developers should consult `CLAUDE.md` in the repository root for implementation-level guidance and tool usage. This constitution defines *what* we build; that file explains *how* we build it.
+
+**Version**: 1.0.0 | **Ratified**: 2025-12-05 | **Last Amended**: 2025-12-05
