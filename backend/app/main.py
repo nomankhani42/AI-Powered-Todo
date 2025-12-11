@@ -42,14 +42,27 @@ app = FastAPI(
     debug=settings.debug,
 )
 
-# CORS Middleware
+# CORS Middleware - Must be added FIRST (before other middleware)
+# This ensures CORS headers are set for all requests
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.allowed_origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allow_headers=["*"],
+    expose_headers=["*"],
+    max_age=3600,
 )
+
+# Log CORS configuration
+logger.info(f"CORS enabled for origins: {settings.allowed_origins}")
+
+
+# OPTIONS Handler for CORS Preflight
+@app.options("/{full_path:path}")
+async def preflight_handler(full_path: str):
+    """Handle CORS preflight requests."""
+    return {"status": "ok"}
 
 
 # Exception Handlers
