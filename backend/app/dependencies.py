@@ -4,6 +4,7 @@ Provides reusable dependencies for database sessions and authentication.
 """
 
 from typing import Generator, Optional
+from uuid import UUID
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer
 from starlette.requests import Request
@@ -70,11 +71,21 @@ def get_current_user(
     token = auth_header[7:]  # Remove "Bearer " prefix
 
     # Verify token and get user ID
-    user_id = verify_token(token)
-    if not user_id:
+    user_id_str = verify_token(token)
+    if not user_id_str:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid or expired token",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    # Convert user_id string to UUID for database query
+    try:
+        user_id = UUID(user_id_str)
+    except (ValueError, TypeError):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token format",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
@@ -127,8 +138,14 @@ def get_optional_user(
     token = auth_header[7:]  # Remove "Bearer " prefix
 
     # Verify token and get user ID
-    user_id = verify_token(token)
-    if not user_id:
+    user_id_str = verify_token(token)
+    if not user_id_str:
+        return None
+
+    # Convert user_id string to UUID for database query
+    try:
+        user_id = UUID(user_id_str)
+    except (ValueError, TypeError):
         return None
 
     # Fetch user from database
