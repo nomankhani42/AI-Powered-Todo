@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+.next/
+out/
+
+# Build output
+build/
+dist/
+
+# Environment files
+.env.local
+.env.*.local
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.py[cod]
+.Python
+.venv/
+venv/
+
+# Cache
+.cache/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+
+# Project-specific
+.claude/settings.local.json
+history/
+*.tmp
