@@ -1,14 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Vercel handles image optimization automatically
+  output: "export",
+  basePath: "/AI-Powered-Todo",
+  trailingSlash: true,
+  dynamicParams: false,
   images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "**",
-      },
-    ],
+    unoptimized: true,
   },
 };
 
