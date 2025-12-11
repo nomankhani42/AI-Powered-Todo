@@ -42,7 +42,10 @@ class Settings:
     # CORS & Security
     allowed_origins: list[str] = field(default_factory=lambda: [
         origin.strip()
-        for origin in os.getenv("ALLOWED_ORIGINS", "http://localhost:3000").split(",")
+        for origin in os.getenv(
+            "ALLOWED_ORIGINS",
+            "http://localhost:3000,https://ai-powered-todo-frontend.vercel.app"
+        ).split(",")
     ])
 
     # Environment
