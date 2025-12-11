@@ -1,8 +1,7 @@
 {
+  "framework": "nextjs",
   "buildCommand": "npm run build",
   "installCommand": "npm install",
-  "framework": "nextjs",
-  "nodeVersion": "18.x",
   "env": {
     "NEXT_PUBLIC_API_URL": "@next_public_api_url"
   }
