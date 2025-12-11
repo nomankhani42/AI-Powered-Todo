@@ -1,7 +1,7 @@
 1:"$Sreact.fragment"
-2:I[92825,["/AI-Powered-Todo/_next/static/chunks/ff1a16fafef87110.js","/AI-Powered-Todo/_next/static/chunks/247eb132b7f7b574.js"],"ClientSegmentRoot"]
-3:I[82391,["/AI-Powered-Todo/_next/static/chunks/99b9f75a3bbe0ca8.js","/AI-Powered-Todo/_next/static/chunks/1d1665cfd19b9ddf.js","/AI-Powered-Todo/_next/static/chunks/55c8f08adc39643e.js","/AI-Powered-Todo/_next/static/chunks/73fc39eca167bcc0.js","/AI-Powered-Todo/_next/static/chunks/7a93c4902607d032.js"],"default"]
-4:I[39756,["/AI-Powered-Todo/_next/static/chunks/ff1a16fafef87110.js","/AI-Powered-Todo/_next/static/chunks/247eb132b7f7b574.js"],"default"]
-5:I[37457,["/AI-Powered-Todo/_next/static/chunks/ff1a16fafef87110.js","/AI-Powered-Todo/_next/static/chunks/247eb132b7f7b574.js"],"default"]
-0:{"buildId":"YVLp_kDucdhbKMQTRaxLM","rsc":["$","$1","c",{"children":[[["$","script","script-0",{"src":"/AI-Powered-Todo/_next/static/chunks/7a93c4902607d032.js","async":true}]],["$","$L2",null,{"Component":"$3","slots":{"children":["$","$L4",null,{"parallelRouterKey":"children","template":["$","$L5",null,{}]}]},"serverProvidedParams":{"params":{},"promises":["$@6"]}}]]}],"loading":null,"isPartial":false}
+2:I[92825,["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/247eb132b7f7b574.js"],"ClientSegmentRoot"]
+3:I[82391,["/_next/static/chunks/99b9f75a3bbe0ca8.js","/_next/static/chunks/fb48b144fd15b960.js","/_next/static/chunks/55c8f08adc39643e.js","/_next/static/chunks/b3597db882b3b2c8.js","/_next/static/chunks/32edcd80be6606f8.js"],"default"]
+4:I[39756,["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/247eb132b7f7b574.js"],"default"]
+5:I[37457,["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/247eb132b7f7b574.js"],"default"]
+0:{"buildId":"7THDwHxLyQDfsvxIDvoLf","rsc":["$","$1","c",{"children":[[["$","script","script-0",{"src":"/_next/static/chunks/32edcd80be6606f8.js","async":true}]],["$","$L2",null,{"Component":"$3","slots":{"children":["$","$L4",null,{"parallelRouterKey":"children","template":["$","$L5",null,{}]}]},"serverProvidedParams":{"params":{},"promises":["$@6"]}}]]}],"loading":null,"isPartial":false}
 6:"$0:rsc:props:children:1:props:serverProvidedParams:params"
