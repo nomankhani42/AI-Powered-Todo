@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setTasks, clearError, updateTask, deleteTask } from "@/redux/slices/taskSlice";
 import agentService from "@/services/agentService";
-import { taskApi } from "@/lib/api";
+import { tasksService } from "@/services/tasksService";
 import { showToast } from "@/utils/toastUtils";
 import type { Task } from "@/redux/slices/taskSlice";
 import type { AppDispatch, RootState } from "@/redux/store";
@@ -211,18 +211,8 @@ export default function ChatBot() {
           // This ensures we have the latest data from the backend
           if (response.success) {
             try {
-              const tasksResponse = await taskApi.getTasks();
-              const tasks = tasksResponse.data;
-
-              // Handle different response formats from API
-              let tasksList: Task[] = [];
-              if (Array.isArray(tasks)) {
-                tasksList = tasks;
-              } else if (tasks?.data && Array.isArray(tasks.data)) {
-                tasksList = tasks.data;
-              } else if (tasks?.items && Array.isArray(tasks.items)) {
-                tasksList = tasks.items;
-              }
+              const tasksResponse = await tasksService.getTasks();
+              const tasksList = tasksResponse.tasks;
 
               // Update Redux with fresh task list for real-time UI updates
               if (tasksList.length > 0) {
