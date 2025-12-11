@@ -39,44 +39,58 @@ Follow spec-driven development principles. Write specifications before implement
 
 ### 4. Data Management
 
-Store all tasks in memory (no persistence required). Use appropriate data structures for efficient operations. Ensure data integrity for all CRUD operations. Use unique identifiers for task management.
+Persist all data in PostgreSQL using well-designed schemas with proper migrations. Use appropriate data structures for efficient operations. Ensure data integrity through constraints, transactions, and ACID compliance. Use unique identifiers for all entities. Implement proper indexing for query performance.
 
-**Rationale**: In-memory storage keeps the MVP simple while proper data structures and IDs ensure correctness. If persistence becomes needed later, a well-structured data layer makes migration straightforward.
+**Rationale**: Persistent, database-backed storage enables multi-user support and data reliability. Well-structured schemas with migrations allow safe evolution of the data model. ACID guarantees ensure correctness in concurrent scenarios.
 
 ### 5. User Experience
 
-Provide clear, helpful CLI feedback. Handle errors gracefully with informative messages. Maintain consistent command patterns. Support intuitive task management workflow.
+Provide intuitive web-based UI and clear API responses. Handle errors gracefully with informative messages and user-friendly notifications. Maintain consistent interaction patterns across web interface and API. Support responsive design for desktop and mobile. Design for accessibility.
 
-**Rationale**: A predictable, friendly CLI experience reduces user frustration and support burden. Consistent patterns make the application feel professional.
+**Rationale**: A predictable, intuitive experience reduces user frustration. Consistent patterns across UI and API make the application feel professional and maintainable. Real-time feedback keeps users informed.
 
-### 6. Code Quality Gates
+### 6. API Design
 
-No global mutable state outside of the main application class. All business logic must be unit testable. Input validation for all user-provided data. Explicit is better than implicit.
+Design RESTful APIs following standard conventions: meaningful resource paths, appropriate HTTP verbs (GET, POST, PUT, DELETE), standard status codes, and descriptive error responses. Version APIs if breaking changes are necessary. Document all endpoints with clear request/response examples.
 
-**Rationale**: Eliminating global state enables isolated testing and reasoning about code behavior. Input validation at system boundaries prevents data corruption. Explicit code is debuggable and maintainable.
+**Rationale**: Standard conventions make APIs predictable and easier to consume. Clear documentation reduces integration friction. Proper versioning prevents breaking existing clients.
+
+### 7. Code Quality Gates
+
+No global mutable state outside of dependency injection containers. All business logic must be unit testable. Input validation for all user-provided data. Explicit is better than implicit. Use type hints throughout (Python type hints, TypeScript strict mode).
+
+**Rationale**: Eliminating unbounded global state enables isolated testing and reasoning about code behavior. Input validation at system boundaries prevents data corruption. Explicit code is debuggable and maintainable. Type safety prevents entire classes of bugs.
 
 ## Constraints
 
 The following constraints are **non-negotiable** and must be respected throughout development:
 
-- **DO NOT** use external databases or file storage
-- **DO NOT** add features beyond the 5 basic requirements (add, delete, update, view, complete)
-- **DO NOT** use complex frameworks for the CLI (argparse or simple input is sufficient)
-- **DO NOT** over-engineer the solution
-- **ALWAYS** validate user input before processing
-- **ALWAYS** provide feedback after each operation
+- **MUST** use PostgreSQL for persistent data storage with proper migrations and schema versioning
+- **MUST** expose RESTful APIs that follow standard HTTP conventions (status codes, error handling)
+- **MUST** implement proper authentication and authorization (secure password hashing, session management)
+- **MUST** integrate with OpenAI Agents SDK for AI-powered features per specification requirements
+- **DO NOT** over-engineer solutions; implement only requirements specified in feature specs
+- **MUST** handle third-party API failures gracefully without blocking core functionality (task CRUD)
+- **ALWAYS** validate user input at system boundaries (API endpoints, form submissions)
+- **ALWAYS** provide meaningful error messages and feedback for all operations
+- **MUST** use Next.js for frontend with TypeScript; FastAPI with Python for backend
+- **MUST** follow principle of least privilege for all permissions and access controls
 
 ## Success Criteria
 
-The application is complete when:
+The fullstack application is complete when (MVP baseline):
 
-- Users can add new tasks with descriptions
-- Users can delete existing tasks by ID
-- Users can update task descriptions
-- Users can view all tasks with their status
-- Users can mark tasks as complete
-- All operations provide clear user feedback
-- The code passes linting and type checking
+- Users can register, authenticate, and access their own task dashboard
+- Authenticated users can create tasks with title, description, and optional deadline
+- Users can view all their tasks organized by status and priority in the web UI
+- Users can update and delete their tasks
+- Users can mark tasks as complete/incomplete
+- PostgreSQL persists all data correctly across sessions
+- Backend APIs return appropriate HTTP status codes and error messages
+- AI integration generates priority recommendations for new tasks (P1 requirement)
+- System gracefully handles OpenAI API failures without breaking task CRUD operations
+- All code passes linting, type checking, and security validation
+- Unit and integration tests cover core functionality (70%+ coverage)
 
 ## Governance
 
@@ -86,4 +100,13 @@ The application is complete when:
 
 **Runtime Guidance**: Developers should consult `CLAUDE.md` in the repository root for implementation-level guidance and tool usage. This constitution defines *what* we build; that file explains *how* we build it.
 
-**Version**: 1.0.0 | **Ratified**: 2025-12-05 | **Last Amended**: 2025-12-05
+**Version**: 2.0.0 | **Ratified**: 2025-12-05 | **Last Amended**: 2025-12-08
+
+**Amendment Log**:
+- **v2.0.0** (2025-12-08): Major revision to support fullstack architecture
+  - Updated Data Management principle to require PostgreSQL persistence
+  - Updated UX principle to support web UI instead of CLI-only
+  - Added API Design principle (new Principle #6)
+  - Replaced legacy constraints (no database) with fullstack requirements (PostgreSQL, APIs, auth, AI)
+  - Updated success criteria to reflect fullstack application goals
+  - Rationale: Evolution of project scope from Python CLI to fullstack web application with AI features
