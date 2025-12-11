@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  output: "export",
+  // Disable dynamic features for static export
+  dynamicParams: false,
 };
 
 export default nextConfig;

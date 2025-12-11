@@ -3,14 +3,14 @@ name: Deploy Frontend to GitHub Pages
 on:
   push:
     branches:
-      - main
+      - master
       - 001-todo-cli
     paths:
       - 'frontend/**'
       - '.github/workflows/deploy-frontend.yml'
   pull_request:
     branches:
-      - main
+      - master
       - 001-todo-cli
     paths:
       - 'frontend/**'
@@ -43,9 +43,7 @@ jobs:
         working-directory: frontend
         run: npm run build
         env:
-          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
-          # Set to production Vercel backend URL when available
-          # NEXT_PUBLIC_API_URL: https://your-backend.vercel.app/api/v1
+          NEXT_PUBLIC_API_URL: https://ai-powered-todo-five.vercel.app/api/v1
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -53,7 +51,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'frontend/.next/standalone/public'
+          path: 'frontend/out'
 
       - name: Deploy to GitHub Pages
         id: deployment
