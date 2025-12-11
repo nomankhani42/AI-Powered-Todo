@@ -102,10 +102,21 @@ async def agent_chat(
         )
 
     except Exception as e:
-        logger.error(f"Agent error for {user.email}: {str(e)}", exc_info=True)
+        error_str = str(e)
+        logger.error(f"Agent error for {user.email}: {error_str}", exc_info=True)
+
+        # Check if error is from OpenRouter API
+        if "User not found" in error_str or "401" in error_str:
+            logger.error(
+                "OpenRouter API Authentication Error - Please verify:\n"
+                "1. OPENROUTER_API_KEY is set in .env\n"
+                "2. API key is valid and not expired\n"
+                "3. Account associated with API key is active"
+            )
+
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Agent error: {str(e)}"
+            detail=f"Agent error: {error_str}"
         )
 
 

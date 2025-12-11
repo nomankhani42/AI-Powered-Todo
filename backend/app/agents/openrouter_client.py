@@ -33,8 +33,17 @@ def create_openrouter_model() -> OpenAIChatCompletionsModel:
             "Get one from: https://openrouter.ai/keys"
         )
 
+    # Validate API key format (should start with sk-or-)
+    if not api_key.startswith("sk-or-"):
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.warning(
+            f"OPENROUTER_API_KEY has unexpected format. "
+            f"Expected to start with 'sk-or-', got: {api_key[:20]}..."
+        )
+
     # Get model from environment or use default
-    model_name = os.getenv("OPENROUTER_MODEL", "deepseek/deepseek-v3.2-speciale")
+    model_name = os.getenv("OPENROUTER_MODEL", "google/gemini-2.5-flash-image-preview")
 
     # Create AsyncOpenAI client pointing to OpenRouter's OpenAI-compatible endpoint
     openrouter_client = AsyncOpenAI(
