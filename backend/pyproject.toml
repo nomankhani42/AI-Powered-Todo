@@ -39,7 +39,6 @@ dependencies = [
     "python-multipart==0.0.9",
     "python-dotenv==1.0.0",
     "openai-agents[litellm]>=0.4.2",
-    "werkzeug>=1.0.1",
 ]
 
 

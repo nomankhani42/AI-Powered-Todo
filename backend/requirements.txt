@@ -21,3 +21,4 @@ python-dotenv==1.0.0
 
 # AI & Agents - OpenAI Agents SDK
 openai-agents[litellm]>=0.4.2
+
