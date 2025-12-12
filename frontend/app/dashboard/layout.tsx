@@ -72,7 +72,7 @@ export default function DashboardLayout({
                   AI Todo
                 </h1>
                 <p className="text-xs sm:text-sm text-gray-500 truncate">
-                  Welcome, <span className="font-semibold text-gray-700">{user?.name || user?.email || "User"}</span>
+                  Welcome, <span className="font-semibold text-gray-700">{user?.full_name || user?.email || "User"}</span>
                 </p>
               </div>
             </div>
