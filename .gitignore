@@ -175,3 +175,6 @@ history/
 specs/.DS_Store
 *.tmp
 .env.local
+
+# UV lock files
+uv.lock
