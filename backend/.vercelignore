@@ -59,7 +59,3 @@ README.md
 # Node modules (if frontend is included)
 frontend/
 node_modules/
-
-# Package managers - use pip with requirements.txt
-uv.lock
-pyproject.toml
