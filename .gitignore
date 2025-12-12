@@ -177,4 +177,3 @@ specs/.DS_Store
 .env.local
 
 # UV lock files
-uv.lock
