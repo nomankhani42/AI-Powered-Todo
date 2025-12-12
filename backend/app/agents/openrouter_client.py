@@ -43,7 +43,7 @@ def create_openrouter_model() -> OpenAIChatCompletionsModel:
         )
 
     # Get model from environment or use default
-    model_name = os.getenv("OPENROUTER_MODEL", "google/gemini-2.5-flash-image-preview")
+    model_name = os.getenv("OPENROUTER_MODEL", "ai/glm-4.5-air:free")
 
     # Create AsyncOpenAI client pointing to OpenRouter's OpenAI-compatible endpoint
     openrouter_client = AsyncOpenAI(

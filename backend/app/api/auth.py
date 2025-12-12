@@ -74,7 +74,7 @@ async def register(
 
         # Auto-generate token for immediate login (better UX)
         token_data = create_tokens(str(user.id))
-        logger.info(f"Auto-login token created for: {user.email}")
+        logger.info(f"Auto-login token created for: {user.email}, user_id={user.id}, user_id_type={type(user.id)}")
 
         return RegisterResponse(
             user=UserResponse.model_validate(user),

@@ -90,8 +90,12 @@ def get_current_user(
         )
 
     # Fetch user from database
+    # Note: expire_on_commit=False ensures we can access user data even after session closes
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
+        # Log for debugging
+        from app.utils.logger import logger
+        logger.warning(f"User not found in database: user_id={user_id}, user_id_type={type(user_id)}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="User not found",

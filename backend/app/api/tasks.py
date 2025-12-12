@@ -28,7 +28,7 @@ router = APIRouter()
 
 
 @router.post(
-    "/",
+    "",
     response_model=TaskResponse,
     status_code=status.HTTP_201_CREATED,
     summary="Create a new task",
@@ -107,7 +107,7 @@ async def _generate_and_update_ai_suggestions(
 
 
 @router.get(
-    "/",
+    "",
     response_model=PaginatedResponse[TaskResponse],
     status_code=status.HTTP_200_OK,
     summary="List user's tasks",
