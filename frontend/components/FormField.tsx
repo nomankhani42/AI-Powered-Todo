@@ -1,6 +1,6 @@
 'use client';
 
-import { IoAlertCircle } from 'react-icons/io5';
+import { IoAlertCircle, IoMailOutline, IoLockClosedOutline, IoPerson } from 'react-icons/io5';
 
 interface FormFieldProps {
   field: {
@@ -40,6 +40,22 @@ export function FormField({
   const error = touched[name] && errors[name];
   const hasError = !!error;
 
+  const getFieldIcon = () => {
+    switch (field.name.toLowerCase()) {
+      case 'email':
+        return <IoMailOutline className="w-5 h-5" />;
+      case 'password':
+      case 'confirmpassword':
+        return <IoLockClosedOutline className="w-5 h-5" />;
+      case 'name':
+        return <IoPerson className="w-5 h-5" />;
+      default:
+        return null;
+    }
+  };
+
+  const fieldIcon = getFieldIcon();
+
   const baseInputClass = `
     w-full px-4 py-3 border-2 rounded-lg transition-all
     focus:outline-none focus:ring-2 focus:ring-offset-0
@@ -49,6 +65,7 @@ export function FormField({
       : 'border-gray-200 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-400'
     }
     text-sm font-medium
+    ${fieldIcon ? 'pl-10' : ''}
   `;
 
   return (
@@ -73,15 +90,22 @@ export function FormField({
           {...props}
         />
       ) : (
-        <input
-          id={name}
-          type={type}
-          {...field}
-          placeholder={placeholder}
-          disabled={disabled}
-          className={`${baseInputClass} ${className}`}
-          {...props}
-        />
+        <div className="relative">
+          {fieldIcon && (
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none flex items-center">
+              {fieldIcon}
+            </div>
+          )}
+          <input
+            id={name}
+            type={type}
+            {...field}
+            placeholder={placeholder}
+            disabled={disabled}
+            className={`${baseInputClass} ${className}`}
+            {...props}
+          />
+        </div>
       )}
 
       {hasError && (

@@ -19,6 +19,7 @@ export default function DashboardLayout({
   const { isAuthenticated, user } = useAuth();
   const [isChecking, setIsChecking] = useState(true);
   const [isSignOutModalOpen, setIsSignOutModalOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   useEffect(() => {
     // Give redux-persist time to rehydrate from localStorage
@@ -26,14 +27,14 @@ export default function DashboardLayout({
       // Check if we have a token in localStorage (fallback check)
       const hasToken = typeof window !== 'undefined' && !!localStorage.getItem('accessToken');
 
-      if (!isAuthenticated && !hasToken) {
+      if (!isAuthenticated && !hasToken && !isLoggingOut) {
         router.push("/auth/login");
       }
       setIsChecking(false);
     }, 100); // Small delay to allow rehydration
 
     return () => clearTimeout(checkAuthTimer);
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, router, isLoggingOut]);
 
   // Check both Redux state AND localStorage before redirecting
   const hasToken = typeof window !== 'undefined' && !!localStorage.getItem('accessToken');
@@ -49,6 +50,7 @@ export default function DashboardLayout({
   }
 
   const handleConfirmLogout = () => {
+    setIsLoggingOut(true);
     dispatch(clearAuth());
     localStorage.removeItem("accessToken");
     localStorage.removeItem("user");
