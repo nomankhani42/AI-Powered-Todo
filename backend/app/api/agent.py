@@ -62,28 +62,48 @@ async def agent_chat(
     - Get info: "Show me details of my project task"
     """
     try:
-        logger.info(f"Agent chat from user {user.email}: {request.message[:50]}")
+        logger.info(f"[Agent] Received chat from user {user.email}: {request.message[:50]}")
 
         # Create agent for this user
+        logger.info(f"[Agent] Creating task agent for user {user.id}")
         agent = create_task_agent(user.id, db)
 
         # Create context that tools will receive
         context = TaskContext(user_id=user.id, db_session=db)
 
         # Run agent with context
+        logger.info(f"[Agent] Running agent with message: {request.message}")
         result = await Runner.run(
             starting_agent=agent,
             input=request.message,
             context=context,
         )
+        logger.info(f"[Agent] Runner completed, result type: {type(result)}")
+        logger.info(f"[Agent] Result attributes: {dir(result)}")
 
         # Extract final message from result
         final_message = str(result.final_output) if result.final_output else "Task completed"
+        logger.info(f"[Agent] Final message: {final_message}")
 
-        # Determine action type from the message (simple heuristic)
+        # Determine action type and extract task data from message
         action = "none"
         task_data = None
         message_lower = final_message.lower()
+
+        # Parse task ID from the final message if present
+        # The tools return TaskResult with task_id and task_title
+        # We need to extract this from the agent's tool calls
+        task_id = None
+        if hasattr(result, 'tool_calls') and result.tool_calls:
+            logger.info(f"[Agent] Tool calls: {result.tool_calls}")
+            # Get the last tool call result if available
+            last_tool_call = result.tool_calls[-1] if result.tool_calls else None
+            if last_tool_call and hasattr(last_tool_call, 'result'):
+                tool_result = last_tool_call.result
+                logger.info(f"[Agent] Tool result: {tool_result}")
+                if isinstance(tool_result, dict):
+                    task_id = tool_result.get('task_id')
+                    logger.info(f"[Agent] Extracted task_id: {task_id}")
 
         if "created" in message_lower or "created successfully" in message_lower:
             action = "create"
@@ -92,14 +112,36 @@ async def agent_chat(
         elif "deleted" in message_lower or "removed" in message_lower:
             action = "delete"
 
-        logger.info(f"Agent completed for {user.email} - action: {action}")
+        logger.info(f"[Agent] Action determined: {action}")
 
-        return AgentMessageResponse(
+        # If we have a task_id and it's a create/update action, fetch the task
+        if task_id and action in ["create", "update"]:
+            try:
+                from uuid import UUID
+                from app.services.task_service import get_task
+                logger.info(f"[Agent] Fetching task with ID: {task_id}")
+                task = get_task(db=db, task_id=UUID(task_id), user_id=user.id)
+                if task:
+                    task_data = TaskData(
+                        id=str(task.id),
+                        title=task.title,
+                        status=task.status.value,
+                        priority=task.priority.value,
+                    )
+                    logger.info(f"[Agent] Task data populated: {task_data}")
+            except Exception as e:
+                logger.error(f"[Agent] Failed to fetch task data: {e}")
+
+        logger.info(f"[Agent] Sending response to user {user.email}")
+
+        response = AgentMessageResponse(
             message=final_message,
             success=True,
             action=action,
             task_data=task_data,
         )
+        logger.info(f"[Agent] Response: {response.model_dump()}")
+        return response
 
     except Exception as e:
         error_str = str(e)

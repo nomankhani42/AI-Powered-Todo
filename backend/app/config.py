@@ -40,11 +40,12 @@ class Settings:
     port: int = int(os.getenv("PORT", 8000))
 
     # CORS & Security
+    # For mobile apps, we need to allow all origins since mobile apps don't send Origin headers
     allowed_origins: list[str] = field(default_factory=lambda: [
         origin.strip()
         for origin in os.getenv(
             "ALLOWED_ORIGINS",
-            "http://localhost:3000,https://ai-powered-todo-frontend.vercel.app"
+            "*"  # Allow all origins for mobile app support
         ).split(",")
     ])
 

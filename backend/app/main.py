@@ -34,7 +34,7 @@ set_tracing_disabled(disabled=True)
 # Setup logging
 logger = setup_logging(__name__)
 
-# Create FastAPI app
+# Create FastAPI appr
 app = FastAPI(
     title=settings.app_name,
     description=settings.app_description,
@@ -82,7 +82,7 @@ async def app_exception_handler(request: Request, exc: AppException):
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
     """Handle Pydantic validation errors."""
     logger.warning(f"Validation error: {exc.errors()}")
-    return create_error_response(
+    return create_error_response( 
         code="VALIDATION_ERROR",
         message="Request validation failed",
         status_code=status.HTTP_400_BAD_REQUEST,
