@@ -25,6 +25,10 @@ def create_success_response(
     return JSONResponse(
         status_code=status_code,
         content=response.model_dump(),
+        headers={
+            "Content-Type": "application/json",
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+        },
     )
 
 
@@ -50,6 +54,10 @@ def create_error_response(
     return JSONResponse(
         status_code=status_code,
         content=response.model_dump(),
+        headers={
+            "Content-Type": "application/json",
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+        },
     )
 
 
@@ -81,4 +89,8 @@ def create_paginated_response(
     return JSONResponse(
         status_code=status_code,
         content=response.model_dump(),
+        headers={
+            "Content-Type": "application/json",
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+        },
     )

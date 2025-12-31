@@ -41,13 +41,26 @@ class Settings:
 
     # CORS & Security
     # For mobile apps, we need to allow all origins since mobile apps don't send Origin headers
+    # React Native and other mobile apps require ALLOWED_ORIGINS="*" to work properly
     allowed_origins: list[str] = field(default_factory=lambda: [
         origin.strip()
         for origin in os.getenv(
             "ALLOWED_ORIGINS",
-            "*"  # Allow all origins for mobile app support
+            "*"  # Default: Allow all origins for mobile app support (React Native, Flutter, etc.)
         ).split(",")
     ])
+
+    # Allow credentials - MUST be False when allowed_origins includes "*" (CORS spec requirement)
+    # For mobile apps using JWT tokens in Authorization header, credentials=False is fine
+    @property
+    def allow_credentials(self) -> bool:
+        """Determine if credentials should be allowed based on origins.
+
+        CORS specification requires allow_credentials=False when allow_origins=["*"].
+        This is fine for mobile apps since they use Authorization header for JWT tokens,
+        not cookies (which require credentials=True).
+        """
+        return "*" not in self.allowed_origins
 
     # Environment
     environment: str = os.getenv("ENVIRONMENT", "development")

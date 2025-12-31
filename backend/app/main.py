@@ -44,10 +44,15 @@ app = FastAPI(
 
 # CORS Middleware - Must be added FIRST (before other middleware)
 # This ensures CORS headers are set for all requests
+#
+# IMPORTANT FOR REACT NATIVE MOBILE APPS:
+# Mobile apps (React Native, Flutter) don't send Origin headers like web browsers.
+# We must use allow_origins=["*"] to support mobile apps.
+# When allow_origins=["*"], allow_credentials MUST be False (CORS spec requirement)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.allowed_origins,
-    allow_credentials=True,
+    allow_origins=settings.allowed_origins,  # Should be ["*"] for mobile app support
+    allow_credentials=settings.allow_credentials,  # Must be False when origins=["*"]
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allow_headers=["*"],
     expose_headers=["*"],
@@ -56,13 +61,29 @@ app.add_middleware(
 
 # Log CORS configuration
 logger.info(f"CORS enabled for origins: {settings.allowed_origins}")
+logger.info(f"CORS allow credentials: {settings.allow_credentials}")
 
 
 # OPTIONS Handler for CORS Preflight
 @app.options("/{full_path:path}")
 async def preflight_handler(full_path: str):
-    """Handle CORS preflight requests."""
-    return {"status": "ok"}
+    """Handle CORS preflight requests for mobile apps.
+
+    Mobile apps (React Native, Flutter, etc.) send OPTIONS requests before
+    actual requests to check CORS permissions. This handler ensures all
+    preflight requests are properly handled with appropriate headers.
+    """
+    from fastapi.responses import JSONResponse
+    return JSONResponse(
+        status_code=200,
+        content={"status": "ok", "message": "CORS preflight successful"},
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS, PATCH",
+            "Access-Control-Allow-Headers": "*",
+            "Access-Control-Max-Age": "3600",
+        },
+    )
 
 
 # Exception Handlers
@@ -106,14 +127,38 @@ async def general_exception_handler(request: Request, exc: Exception):
 async def health_check():
     """Check application and database health.
 
+    This endpoint is designed for mobile app health checks and monitoring.
+    Mobile apps can use this to verify backend connectivity before making
+    authenticated requests.
+
     Returns:
-        dict: Health status
+        dict: Health status with detailed information
     """
+    from fastapi.responses import JSONResponse
+    import time
+
     db_ok = check_db_connection()
-    return {
-        "status": "healthy" if db_ok else "unhealthy",
-        "database": "ok" if db_ok else "error",
+    is_healthy = db_ok
+
+    response_data = {
+        "status": "healthy" if is_healthy else "degraded",
+        "timestamp": int(time.time()),
+        "services": {
+            "database": "ok" if db_ok else "error",
+            "api": "ok",
+        },
+        "version": settings.app_version,
+        "environment": settings.environment,
     }
+
+    return JSONResponse(
+        status_code=200 if is_healthy else 503,
+        content=response_data,
+        headers={
+            "Content-Type": "application/json",
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+        },
+    )
 
 
 # API Route Registration
